@@ -1,5 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
+
+const morgan = require('morgan');
+const cookieParser = require ('cookie-parser');
+
 require('dotenv').config();
 
 //import routes
@@ -15,6 +19,15 @@ mongoose.connect(process.env.DATABASE,{
     useUnifiedTopology: true ,
     useCreateIndex:true
 }).then (() => console.log("DB Connected"));
+
+
+
+//middlewares
+app.use(morgan("dev"));
+
+app.use(express.json()); //body parser in express
+
+app.use(cookieParser());
 
 
 //routes middleware
