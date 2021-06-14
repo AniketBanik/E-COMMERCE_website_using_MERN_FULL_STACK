@@ -168,3 +168,34 @@ exports.cupdate = (req , res) => {
     });
 
 };
+
+/**
+ * return products to front end users based on 2 matters=> 
+ * sell/ arrival
+ * In postman,
+ * by sell= /products?sortBy=sold&order=desc&limit=5
+ * by arrival= /products?sortBy=createdAt&order=desc&limit=5
+ * if no params are sent, then all products are returned.
+ */
+
+exports.list=(req,res)=>{
+    let order = req.query.order ? req.query.order : 'asc'
+    let sortBy = req.query.sortBy ? req.query.sortBy : '_id'
+    let limit = req.query.limit ? req.query.limit : 5
+    
+    Product.find()
+    .select("-photo")
+    .populate("category") //category name, created at , updated at will be visible
+    .sort([[sortBy,order]])
+    .limit(limit)
+    .exec((err,products)=>{
+        if(err){
+            return res.status(400).json({
+                error: "Products can not be found"
+            });
+        }
+        res.send(products);
+    });
+
+
+};
